@@ -24,6 +24,7 @@ public class FavouriteActivityFragment extends Fragment {
     public ImageCustomAdapter favPostersAdapter;
     String [] intentExtra = new String[6];
     MovieList selectFavMovie;
+    boolean onStartTablet = true;
     public FavouriteActivityFragment() {
     }
 
@@ -36,6 +37,9 @@ public class FavouriteActivityFragment extends Fragment {
         data= new MovieDbHelper(getActivity());
         final MovieDataDB movData = data.getData();
         if(movData != null) {
+            favPostersAdapter = new ImageCustomAdapter(getActivity(), (ArrayList) movData.favPosters);
+            favMoviesGrid.setAdapter(favPostersAdapter);
+
             favMoviesGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -49,15 +53,13 @@ public class FavouriteActivityFragment extends Fragment {
                     selectFavMovie.openSelectedmovie(intentExtra);
                 }
             });
-            favPostersAdapter = new ImageCustomAdapter(getActivity(), (ArrayList) movData.favPosters);
-            favMoviesGrid.setAdapter(favPostersAdapter);
         }
         return rootView;
     }
     public void setSelectFavMovie(MovieList favmoviee){
         selectFavMovie = favmoviee;
     }
-
+    
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

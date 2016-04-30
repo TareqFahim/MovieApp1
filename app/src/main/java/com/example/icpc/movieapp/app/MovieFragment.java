@@ -1,6 +1,8 @@
 package com.example.icpc.movieapp.app;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,6 +54,7 @@ public class MovieFragment extends Fragment {
     List movieTitle = new ArrayList();  // Movies' titles
     List movieID = new ArrayList();
     MovieList movieListListner;
+    boolean onStartTablet = true;
     //String movieJson;               // Full json string
     String [] intentExtra = new String[6] ;          // Extra of intent sent to MovieDetail
     public MovieFragment() {
@@ -87,6 +90,11 @@ public class MovieFragment extends Fragment {
     public void onStart() {
         super.onStart();
         updateMovies();
+    }
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     @Override
@@ -231,6 +239,16 @@ public class MovieFragment extends Fragment {
                 }
                 postersAdapter = new ImageCustomAdapter(getActivity(),(ArrayList) result);
                 gridView.setAdapter(postersAdapter);
+            }
+            if(isTablet(getActivity()) && onStartTablet){
+                onStartTablet = false;
+                intentExtra[0] = (String) image.get(0);
+                intentExtra[1] = (String) movieTitle.get(0);
+                intentExtra[2] = (String) movieReleaseDate.get(0);
+                intentExtra[3] = (String) movieOverview.get(0);
+                intentExtra[4] = (String) movieRate.get(0);
+                intentExtra[5] = (String) movieID.get(0);
+                movieListListner.openSelectedmovie(intentExtra);
             }
         }
 
